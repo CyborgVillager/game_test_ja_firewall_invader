@@ -1,4 +1,5 @@
 import pygame
+import math
 from entites_movement import *
 
 # Intialize the pygame
@@ -14,8 +15,6 @@ background = pygame.image.load('image/background.jpg')
 pygame.display.set_caption('JA\'s Firewall Invader')
 icon = pygame.image.load('image/computer.png')
 pygame.display.set_icon(icon)
-
-
 
 # Score
 score_value = 0
@@ -50,6 +49,14 @@ def fire_bullet(x, y):
     window_screen.blit(bullet_Image, (x + 16, y + 10))
 
 
+# Collision with hostile
+def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX, bulletY):
+    distance = math.sqrt(math.pow(hostile_SpywareX - bulletX, 2) + (math.pow(hostile_SpywareY - bulletY, 2)))
+    if distance < 27:
+        return True
+    else:
+        return False
+
 
 # Hostile Types
 def hostile_spyware(x, y):  # new values for x & y are able to be drawn on the screen
@@ -57,13 +64,20 @@ def hostile_spyware(x, y):  # new values for x & y are able to be drawn on the s
     window_screen.blit(hostile_Spyware_Image, (x, y))
 
 
+for index in range(number_of_hostiles):
+    hostile_Spyware_Image.append(pygame.image.load('image/spyware0.png'))
+    hostile_SpywareX.append(random.randint(0, 736))
+    hostile_SpywareY.append(random.randint(50, 150))
+    hostile_SpywareX_change.append(4)
+    hostile_SpywareY_change.append(40)
+
 # Game Loop
 running = True
 while running:
     # Has red,green, blue
     window_screen.fill((0, 0, 0))
     # Background Image
-    window_screen.blit(background,(0,0))
+    window_screen.blit(background, (0, 0))
     # keystrokes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -85,9 +99,6 @@ while running:
                     # Get the current x cordinate of the spaceship
                     bulletX = playerX
                     fire_bullet(bulletX, bulletY)
-
-
-
 
         if event.type == pygame.KEYUP:
             print('A keystroke has been released')
@@ -130,9 +141,42 @@ while running:
         bulletY = playerY
         bullet_state = "ready"
 
-    if bullet_state is "fire":
-        fire_bullet(bulletX, bulletY)
-        bulletY -= bulletY_change
+
+
+    # Enemy Movement
+    for index in range(number_of_hostiles):
+
+        # Game Over
+        if hostile_SpywareY[index] > 440:
+            for area in range(number_of_hostiles):
+                hostile_SpywareY[area] = 2000
+            game_over_text()
+            break
+
+        hostile_SpywareX[index] += hostile_SpywareX_change[i]
+        if hostile_SpywareX[index] <= 0:
+            hostile_SpywareX_change[index] = 4
+            hostile_SpywareY[index] += hostile_SpywareY_change[i]
+        elif hostile_SpywareX[index] >= 736:
+            hostile_SpywareX_change[index] = -4
+            hostile_SpywareY[index] += hostile_SpywareY_change[i]
+
+        if bullet_state is "fire":
+            fire_bullet(bulletX, bulletY)
+            bulletY -= bulletY_change
+        # Collision
+        collision = isCollision(hostile_SpywareX[index], hostile_SpywareY[index], bulletX, bulletY)
+        if collision:
+
+            bulletY = 480
+            bullet_state = "ready"
+            score_value += 1
+            hostile_SpywareX[index] = random.randint(0, 736)
+            hostile_SpywareY[index] = random.randint(50, 150)
+
+        hostile_spyware(hostile_SpywareX[index], hostile_SpywareY[index], index)
+
+
 
     player(playerX, playerY)
     # hostile

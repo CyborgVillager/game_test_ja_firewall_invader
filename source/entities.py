@@ -63,6 +63,8 @@ spyware_speed_left = -1
 hostile_SpywareX_change = 0.3
 # move down by 15 pixels
 hostile_SpywareY_change = 15
+number_of_hostiles = 7
+
 
 
 hostile_SpywareY += hostile_SpywareY_change
