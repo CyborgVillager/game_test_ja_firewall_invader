@@ -80,11 +80,12 @@ while running:
             if event.key == pygame.K_DOWN:
                 playerY_change = right_down_player_speed
             if event.key == pygame.K_SPACE:
+                bullet_change += 1
                 if bullet_state is "ready":
                     # Get the current x cordinate of the spaceship
                     bulletX = playerX
                     fire_bullet(bulletX, bulletY)
-                    bullet_change += 1
+
 
 
 
@@ -124,9 +125,9 @@ while running:
         elif hostile_SpywareY >= 550:
             hostile_SpywareY = 550
 
-        # Bullet Movement
+    # Bullet Movement
     if bulletY <= 0:
-        bulletY = 480
+        bulletY = playerY
         bullet_state = "ready"
 
     if bullet_state is "fire":
