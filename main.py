@@ -15,6 +15,16 @@ pygame.display.set_icon(icon)
 player_Image = pygame.image.load('image/firewall_logo.png')
 playerX = 370
 playerY = 500
+playerX_change = 0
+playerY_change = 0
+# user movement
+left_up_player_speed = -0.1
+right_down_player_speed = 0.1
+# idle movement
+left_up_idle_movement = -0.002
+right_down_idle_movement = 0.002
+
+
 
 # Score
 
@@ -49,10 +59,32 @@ while running:
     # Background Image
 
 
+# keystrokes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    playerY -= .1
+        # sys will check if keystroke is pressed by user
+        if event.type == pygame.KEYDOWN:
+            print('A keystroke has been pressed')
+            if event.key == pygame.K_LEFT:
+               playerX_change = left_up_player_speed
+            if event.key == pygame.K_RIGHT:
+                 playerX_change = right_down_player_speed
+            if event.key == pygame.K_UP:
+                playerY_change = left_up_player_speed
+            if event.key == pygame.K_DOWN:
+                playerY_change = right_down_player_speed
+
+        if event.type == pygame.KEYUP:
+            print('A keystroke has been released')
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                playerY_change = left_up_idle_movement
+                playerX_change = right_down_idle_movement
+
+              
+
+    playerY += playerY_change
+    playerX += playerX_change
     player(playerX,playerY)
     pygame.display.update()
 
