@@ -44,6 +44,13 @@ def player(x, y):  # new values for x & y are able to be drawn on the screen
     window_screen.blit(player_Image, (x, y))
 
 
+def fire_bullet(x, y):
+    global bullet_state
+    bullet_state = "fire"
+    window_screen.blit(bullet_Image, (x + 16, y + 10))
+
+
+
 # Hostile Types
 def hostile_spyware(x, y):  # new values for x & y are able to be drawn on the screen
     # draw the player onto the screen
@@ -72,6 +79,14 @@ while running:
                 playerY_change = left_up_player_speed
             if event.key == pygame.K_DOWN:
                 playerY_change = right_down_player_speed
+            if event.key == pygame.K_SPACE:
+                if bullet_state is "ready":
+                    # Get the current x cordinate of the spaceship
+                    bulletX = playerX
+                    fire_bullet(bulletX, bulletY)
+                    bullet_change += 1
+
+
 
         if event.type == pygame.KEYUP:
             print('A keystroke has been released')
@@ -108,6 +123,15 @@ while running:
             hostile_SpywareY += hostile_SpywareY_change
         elif hostile_SpywareY >= 550:
             hostile_SpywareY = 550
+
+        # Bullet Movement
+    if bulletY <= 0:
+        bulletY = 480
+        bullet_state = "ready"
+
+    if bullet_state is "fire":
+        fire_bullet(bulletX, bulletY)
+        bulletY -= bulletY_change
 
     player(playerX, playerY)
     # hostile
