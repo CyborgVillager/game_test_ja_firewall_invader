@@ -1,11 +1,14 @@
 import pygame
-from entities import *
+from entites_movement import *
 
 # Intialize the pygame
 pygame.init()
 
 # window screen
 window_screen = pygame.display.set_mode((800, 600))
+
+# Background
+background = pygame.image.load('image/background.jpg')
 
 # Title / Icon
 pygame.display.set_caption('JA\'s Firewall Invader')
@@ -53,7 +56,7 @@ while running:
     # Has red,green, blue
     window_screen.fill((0, 0, 0))
     # Background Image
-
+    window_screen.blit(background,(0,0))
     # keystrokes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -90,6 +93,21 @@ while running:
         playerY = 0
     elif playerY >= 550:
         playerY = 550
+
+    # Hostile Spyware Movement
+    hostile_SpywareX += hostile_SpywareX_change
+    if hostile_SpywareX <= 0:
+        hostile_SpywareX_change = spyware_speed_right
+        hostile_SpywareY += hostile_SpywareY_change
+    elif hostile_SpywareX >= 766:
+        hostile_SpywareX_change = spyware_speed_left
+
+        hostile_SpywareY += hostile_SpywareY_change
+        if hostile_SpywareY <= 0:
+            hostile_SpywareY_change = 0.3
+            hostile_SpywareY += hostile_SpywareY_change
+        elif hostile_SpywareY >= 550:
+            hostile_SpywareY = 550
 
     player(playerX, playerY)
     # hostile
