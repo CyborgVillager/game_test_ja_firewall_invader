@@ -1,4 +1,5 @@
 import pygame
+import math
 from entites_movement import *
 
 # Intialize the pygame
@@ -14,8 +15,6 @@ background = pygame.image.load('image/background.jpg')
 pygame.display.set_caption('JA\'s Firewall Invader')
 icon = pygame.image.load('image/computer.png')
 pygame.display.set_icon(icon)
-
-
 
 # Score
 score_value = 0
@@ -44,10 +43,26 @@ def player(x, y):  # new values for x & y are able to be drawn on the screen
     window_screen.blit(player_Image, (x, y))
 
 
+def fire_bullet(x, y):
+    global bullet_state
+    bullet_state = "fire"
+    window_screen.blit(bullet_Image, (x, y - 20))
+
+
 # Hostile Types
 def hostile_spyware(x, y):  # new values for x & y are able to be drawn on the screen
     # draw the player onto the screen
     window_screen.blit(hostile_Spyware_Image, (x, y))
+
+
+# Collision w/bullet & Spyware
+def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location):
+    distance = math.sqrt(
+        math.pow(hostile_SpywareX - bulletX_Location, 2) + (math.pow(hostile_SpywareY - bulletY_Location, 2)))
+    if distance < 27:
+        return True
+    else:
+        return False
 
 
 # Game Loop
@@ -56,7 +71,8 @@ while running:
     # Has red,green, blue
     window_screen.fill((0, 0, 0))
     # Background Image
-    window_screen.blit(background,(0,0))
+    window_screen.blit(background, (0, 0))
+
     # keystrokes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -72,6 +88,11 @@ while running:
                 playerY_change = left_up_player_speed
             if event.key == pygame.K_DOWN:
                 playerY_change = right_down_player_speed
+            if event.key == pygame.K_SPACE:
+                if bullet_state is "ready":
+                    # Get the current x cordinate of the spaceship
+                    bulletX_Location = playerX
+                    fire_bullet(bulletX_Location, bulletY_Location)
 
         if event.type == pygame.KEYUP:
             print('A keystroke has been released')
@@ -108,6 +129,15 @@ while running:
             hostile_SpywareY += hostile_SpywareY_change
         elif hostile_SpywareY >= 550:
             hostile_SpywareY = 550
+
+        # Bullet Movement
+    if bulletY_Location <= 0:
+        bulletY_Location = playerY
+        bullet_state = "ready"
+
+    if bullet_state is "fire":
+        fire_bullet(bulletX_Location, bulletY_Location)
+        bulletY_Location -= bulletY_change
 
     player(playerX, playerY)
     # hostile

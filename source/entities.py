@@ -38,3 +38,12 @@ hostile_SpywareY_change = 15
 hostile_SpywareY += hostile_SpywareY_change
 hostile_SpywareX += hostile_SpywareX_change
 
+
+
+# Bullet
+bullet_Image = pygame.image.load('image/zero_bullet.png')
+bulletX_Location = 0
+bulletY_Location = 480
+bulletX_change = 0
+bulletY_change = 10
+bullet_state = "ready"
