@@ -46,7 +46,17 @@ def player(x, y):  # new values for x & y are able to be drawn on the screen
 def fire_bullet(x, y):
     global bullet_state
     bullet_state = "fire"
-    window_screen.blit(bullet_Image, (x, y - 20))
+
+
+
+# Collision with hostile
+def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX, bulletY):
+    distance = math.sqrt(math.pow(hostile_SpywareX - bulletX, 2) + (math.pow(hostile_SpywareY - bulletY, 2)))
+    if distance < 27:
+        return True
+    else:
+        return False
+
 
 
 # Hostile Types
@@ -63,6 +73,14 @@ def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Lo
         return True
     else:
         return False
+
+
+for index in range(number_of_hostiles):
+    hostile_Spyware_Image.append(pygame.image.load('image/spyware0.png'))
+    hostile_SpywareX.append(random.randint(0, 736))
+    hostile_SpywareY.append(random.randint(50, 150))
+    hostile_SpywareX_change.append(4)
+    hostile_SpywareY_change.append(40)
 
 
 # Game Loop
@@ -88,11 +106,18 @@ while running:
                 playerY_change = left_up_player_speed
             if event.key == pygame.K_DOWN:
                 playerY_change = right_down_player_speed
-            if event.key == pygame.K_SPACE:
+
                 if bullet_state is "ready":
                     # Get the current x cordinate of the spaceship
                     bulletX_Location = playerX
                     fire_bullet(bulletX_Location, bulletY_Location)
+
+                bullet_change += 1
+                if bullet_state is "ready":
+                    # Get the current x cordinate of the spaceship
+                    bulletX = playerX
+                    fire_bullet(bulletX, bulletY)
+
 
         if event.type == pygame.KEYUP:
             print('A keystroke has been released')
@@ -130,6 +155,7 @@ while running:
         elif hostile_SpywareY >= 550:
             hostile_SpywareY = 550
 
+
         # Bullet Movement
     if bulletY_Location <= 0:
         bulletY_Location = playerY
@@ -138,6 +164,49 @@ while running:
     if bullet_state is "fire":
         fire_bullet(bulletX_Location, bulletY_Location)
         bulletY_Location -= bulletY_change
+
+    # Bullet Movement
+    if bulletY <= 0:
+        bulletY = playerY
+        bullet_state = "ready"
+
+
+
+    # Enemy Movement
+    for index in range(number_of_hostiles):
+
+        # Game Over
+        if hostile_SpywareY[index] > 440:
+            for area in range(number_of_hostiles):
+                hostile_SpywareY[area] = 2000
+            game_over_text()
+            break
+
+        hostile_SpywareX[index] += hostile_SpywareX_change[i]
+        if hostile_SpywareX[index] <= 0:
+            hostile_SpywareX_change[index] = 4
+            hostile_SpywareY[index] += hostile_SpywareY_change[i]
+        elif hostile_SpywareX[index] >= 736:
+            hostile_SpywareX_change[index] = -4
+            hostile_SpywareY[index] += hostile_SpywareY_change[i]
+
+        if bullet_state is "fire":
+            fire_bullet(bulletX, bulletY)
+            bulletY -= bulletY_change
+        # Collision
+        collision = isCollision(hostile_SpywareX[index], hostile_SpywareY[index], bulletX, bulletY)
+        if collision:
+
+            bulletY = 480
+            bullet_state = "ready"
+            score_value += 1
+            hostile_SpywareX[index] = random.randint(0, 736)
+            hostile_SpywareY[index] = random.randint(50, 150)
+
+        hostile_spyware(hostile_SpywareX[index], hostile_SpywareY[index], index)
+
+
+
 
     player(playerX, playerY)
     # hostile

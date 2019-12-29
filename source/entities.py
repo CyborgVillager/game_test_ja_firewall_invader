@@ -1,5 +1,6 @@
 import pygame
 import random
+from random import randint
 
 
 playerX_location = 370
@@ -20,6 +21,35 @@ right_down_player_speed = 2
 left_up_idle_movement = -0
 right_down_idle_movement = 0
 
+#bullet
+bullet_change = 0
+bullet_list = ['0','1','2']
+print(bullet_change)
+
+zero = 0
+
+if bullet_change >= int(bullet_list[0]):
+    bullet_change += 1
+    bullet_Image = pygame.image.load('image/bullets/zero_bullet.png')
+
+elif bullet_change >= int(bullet_list[1]):
+    bullet_change += 1
+    bullet_Image = pygame.image.load('image/bullets/one_bullet.png')
+
+elif bullet_change >= int(bullet_list[2]):
+    bullet_Image = pygame.image.load('image/bullets/error_bullet.png')
+    bullet_change += 1
+else:
+    bullet_Image = pygame.image.load('image/bullets/sorry_no_can_do_bullet.png')
+    bullet_change * zero
+
+
+bulletX = 0
+bulletY = 580
+bulletX_change = 0
+bulletY_change = 10
+bullet_state = "ready"
+
 
 # Hostile Spyware
 hostile_Spyware_Image = pygame.image.load('image/spyware0.png')
@@ -33,10 +63,13 @@ spyware_speed_left = -1
 hostile_SpywareX_change = 0.3
 # move down by 15 pixels
 hostile_SpywareY_change = 15
+number_of_hostiles = 7
+
 
 
 hostile_SpywareY += hostile_SpywareY_change
 hostile_SpywareX += hostile_SpywareX_change
+
 
 
 
