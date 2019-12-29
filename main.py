@@ -75,12 +75,7 @@ def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Lo
         return False
 
 
-for index in range(number_of_hostiles):
-    hostile_Spyware_Image.append(pygame.image.load('image/spyware0.png'))
-    hostile_SpywareX.append(random.randint(0, 736))
-    hostile_SpywareY.append(random.randint(50, 150))
-    hostile_SpywareX_change.append(4)
-    hostile_SpywareY_change.append(40)
+
 
 
 # Game Loop
@@ -106,7 +101,7 @@ while running:
                 playerY_change = left_up_player_speed
             if event.key == pygame.K_DOWN:
                 playerY_change = right_down_player_speed
-
+            if event.key == pygame.K_SPACE:
                 if bullet_state is "ready":
                     # Get the current x cordinate of the spaceship
                     bulletX_Location = playerX
@@ -172,38 +167,12 @@ while running:
 
 
 
-    # Enemy Movement
-    for index in range(number_of_hostiles):
 
-        # Game Over
-        if hostile_SpywareY[index] > 440:
-            for area in range(number_of_hostiles):
-                hostile_SpywareY[area] = 2000
-            game_over_text()
-            break
-
-        hostile_SpywareX[index] += hostile_SpywareX_change[i]
-        if hostile_SpywareX[index] <= 0:
-            hostile_SpywareX_change[index] = 4
-            hostile_SpywareY[index] += hostile_SpywareY_change[i]
-        elif hostile_SpywareX[index] >= 736:
-            hostile_SpywareX_change[index] = -4
-            hostile_SpywareY[index] += hostile_SpywareY_change[i]
 
         if bullet_state is "fire":
             fire_bullet(bulletX, bulletY)
             bulletY -= bulletY_change
-        # Collision
-        collision = isCollision(hostile_SpywareX[index], hostile_SpywareY[index], bulletX, bulletY)
-        if collision:
 
-            bulletY = 480
-            bullet_state = "ready"
-            score_value += 1
-            hostile_SpywareX[index] = random.randint(0, 736)
-            hostile_SpywareY[index] = random.randint(50, 150)
-
-        hostile_spyware(hostile_SpywareX[index], hostile_SpywareY[index], index)
 
 
 
