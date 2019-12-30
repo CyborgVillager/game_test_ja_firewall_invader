@@ -16,16 +16,6 @@ pygame.display.set_caption('JA\'s Firewall Invader')
 icon = pygame.image.load('image/computer.png')
 pygame.display.set_icon(icon)
 
-# Score
-player_bullet_destroyed_hostile_score = 0
-font = pygame.font.Font('freesansbold.ttf', 32)
-
-textX = 10
-testY = 10
-
-# Game Over
-over_font = pygame.font.Font('freesansbold.ttf', 64)
-
 
 # Player
 def player(x, y):  # new values for x & y are able to be drawn on the screen
@@ -41,19 +31,16 @@ def fire_bullet(x, y):
 
 def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location):
     distance = math.sqrt(math.pow(hostile_SpywareX - bulletX_Location, 2) + (math.pow(hostile_SpywareY - bulletY_Location, 2)))
-    hostile_Spyware_health = 2
-    zero = 0
     if distance < 27 :
-        hostile_Spyware_health -= 1
         return True
     else:
         return False
 
 
 # Hostile Types
-def hostile_Spyware(x, y):  # new values for x & y are able to be drawn on the screen
+def hostile_Spyware(x, y, i):  # new values for x & y are able to be drawn on the screen
     # draw the player onto the screen
-    window_screen.blit(hostile_Spyware_Image, (x, y))
+    window_screen.blit(hostile_Spyware_Image[index], (x, y))
 
 
 # Game Loop
@@ -91,35 +78,48 @@ while running:
                 playerY_change = left_up_idle_movement
                 playerX_change = right_down_idle_movement
 
-    playerY += playerY_change
-    playerX += playerX_change
+        playerY += playerY_change
+        playerX += playerX_change
 
-    playerX += playerX_change
-    if playerX <= 0:
-        playerX = 0
-    elif playerX >= 766:
-        playerX = 766
+        playerX += playerX_change
+        if playerX <= 0:
+            playerX = 0
+        elif playerX >= 766:
+            playerX = 766
 
-    playerY += playerY_change
-    if playerY <= 0:
-        playerY = 0
-    elif playerY >= 550:
-        playerY = 550
+        playerY += playerY_change
+        if playerY <= 0:
+            playerY = 0
+        elif playerY >= 550:
+            playerY = 550
 
     # Hostile Spyware Movement
-    hostile_SpywareX += hostile_SpywareX_change
-    if hostile_SpywareX <= 0:
-        hostile_SpywareX_change = spyware_speed_right
-        hostile_SpywareY += hostile_SpywareY_change
-    elif hostile_SpywareX >= 766:
-        hostile_SpywareX_change = spyware_speed_left
+    for i in range(number_of_hostiles):
+        hostile_SpywareX_Location[i] += hostile_SpywareX_change[i]
+        if hostile_SpywareX_Location[i] <= 0:
+            hostile_SpywareX_change[i] = 4
+            hostile_SpywareY_Location[i] += hostile_SpywareY_change[i]
+        elif hostile_SpywareX_Location[i] >= 736:
+            hostile_SpywareX_change[i] = -4
+            hostile_SpywareY_Location[i] += hostile_SpywareY_change[i]
 
-        hostile_SpywareY += hostile_SpywareY_change
-        if hostile_SpywareY <= 0:
-            hostile_SpywareY_change = 0.3
-            hostile_SpywareY += hostile_SpywareY_change
-        elif hostile_SpywareY >= 550:
-            hostile_SpywareY = 550
+        hostile_SpywareY_Location += hostile_SpywareY_change[i]
+        if hostile_SpywareY_Location[i] <= 0:
+            hostile_SpywareY_change[i] = 0.3
+            hostile_SpywareY_Location[i] += hostile_SpywareY_change[i]
+        elif hostile_SpywareY_Location[i] >= 550:
+            hostile_SpywareY_Location[i] = 550
+
+        # Collision
+        collision = isCollision(hostile_SpywareX[i], hostile_SpywareY[i], bulletX_Location, bulletY_Location)
+        if collision:
+            bulletY_Location = 480
+            bullet_state = "ready"
+            player_bullet_destroyed_hostile_score += 1
+            print(player_bullet_destroyed_hostile_score)
+            hostile_SpywareX[i] = random.randint(0, 736)
+            hostile_SpywareY[i] = random.randint(50, 150)
+        hostile_Spyware(hostile_SpywareX[i], hostile_SpywareY[index],index)
 
         # Bullet Movement
     if bulletY_Location <= 0:
@@ -134,21 +134,11 @@ while running:
         bulletY_Location = playerY
         bullet_state = "ready"
 
-    # Collision
 
-    collision = isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location)
-    if collision:
-        bulletY_Location = 480
-        bullet_state = "ready"
-        hostile_Spyware_health > 1
-        player_bullet_destroyed_hostile_score += 1
-        print(player_bullet_destroyed_hostile_score)
-        hostile_SpywareX = random.randint(0, 736)
-        hostile_SpywareY = random.randint(50, 150)
 
-    # Enemy Movement
+        # Enemy Movement
 
     player(playerX, playerY)
     # hostile
-    hostile_Spyware(hostile_SpywareX, hostile_SpywareY)
+
     pygame.display.update()
