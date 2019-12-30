@@ -17,7 +17,7 @@ icon = pygame.image.load('image/computer.png')
 pygame.display.set_icon(icon)
 
 # Score
-score_value = 0
+player_bullet_destroyed_hostile_score = 0
 font = pygame.font.Font('freesansbold.ttf', 32)
 
 textX = 10
@@ -25,16 +25,6 @@ testY = 10
 
 # Game Over
 over_font = pygame.font.Font('freesansbold.ttf', 64)
-
-
-def show_score(x, y):
-    score = font.render("Score : " + str(score_value), True, (255, 255, 255))
-    window_screen.blit(score, (x, y))
-
-
-def game_over_text():
-    over_text = over_font.render("GAME OVER", True, (255, 255, 255))
-    window_screen.blit(over_text, (200, 250))
 
 
 # Player
@@ -46,33 +36,19 @@ def player(x, y):  # new values for x & y are able to be drawn on the screen
 def fire_bullet(x, y):
     global bullet_state
     bullet_state = "fire"
+    window_screen.blit(bullet_Image,(x,y+40))
 
-
-
-# Collision with hostile
-def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX, bulletY):
-    distance = math.sqrt(math.pow(hostile_SpywareX - bulletX, 2) + (math.pow(hostile_SpywareY - bulletY, 2)))
+def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location):
+    distance = math.sqrt(math.pow(hostile_SpywareX - bulletX_Location, 2) + (math.pow(hostile_SpywareY - bulletY_Location, 2)))
     if distance < 27:
         return True
     else:
         return False
-
-
 
 # Hostile Types
-def hostile_spyware(x, y):  # new values for x & y are able to be drawn on the screen
+def hostile_Spyware(x, y):  # new values for x & y are able to be drawn on the screen
     # draw the player onto the screen
     window_screen.blit(hostile_Spyware_Image, (x, y))
-
-
-# Collision w/bullet & Spyware
-def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location):
-    distance = math.sqrt(
-        math.pow(hostile_SpywareX - bulletX_Location, 2) + (math.pow(hostile_SpywareY - bulletY_Location, 2)))
-    if distance < 27:
-        return True
-    else:
-        return False
 
 
 
@@ -106,12 +82,6 @@ while running:
                     # Get the current x cordinate of the spaceship
                     bulletX_Location = playerX
                     fire_bullet(bulletX_Location, bulletY_Location)
-
-                bullet_change += 1
-                if bullet_state is "ready":
-                    # Get the current x cordinate of the spaceship
-                    bulletX = playerX
-                    fire_bullet(bulletX, bulletY)
 
 
         if event.type == pygame.KEYUP:
@@ -160,24 +130,27 @@ while running:
         fire_bullet(bulletX_Location, bulletY_Location)
         bulletY_Location -= bulletY_change
 
-    # Bullet Movement
-    if bulletY <= 0:
-        bulletY = playerY
+    if bulletY_Location <= 0:
+        bulletY_Location = playerY
         bullet_state = "ready"
 
 
+    # Collision
 
+    collision = isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location)
+    if collision:
+        bulletY_Location = 480
+        bullet_state = "ready"
+        player_bullet_destroyed_hostile_score += 1
+        print(player_bullet_destroyed_hostile_score)
+        hostile_SpywareX = random.randint(0, 736)
+        hostile_SpywareY = random.randint(50, 150)
 
-
-        if bullet_state is "fire":
-            fire_bullet(bulletX, bulletY)
-            bulletY -= bulletY_change
-
-
+    # Enemy Movement
 
 
 
     player(playerX, playerY)
     # hostile
-    hostile_spyware(hostile_SpywareX, hostile_SpywareY)
+    hostile_Spyware(hostile_SpywareX, hostile_SpywareY)
     pygame.display.update()
