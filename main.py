@@ -36,22 +36,24 @@ def player(x, y):  # new values for x & y are able to be drawn on the screen
 def fire_bullet(x, y):
     global bullet_state
     bullet_state = "fire"
-    window_screen.blit(bullet_Image,(x,y+40))
+    window_screen.blit(bullet_Image, (x, y + 40))
+
 
 def isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location):
     distance = math.sqrt(math.pow(hostile_SpywareX - bulletX_Location, 2) + (math.pow(hostile_SpywareY - bulletY_Location, 2)))
-    if distance < 27:
+    hostile_Spyware_health = 2
+    zero = 0
+    if distance < 27 :
+        hostile_Spyware_health -= 1
         return True
     else:
         return False
+
 
 # Hostile Types
 def hostile_Spyware(x, y):  # new values for x & y are able to be drawn on the screen
     # draw the player onto the screen
     window_screen.blit(hostile_Spyware_Image, (x, y))
-
-
-
 
 
 # Game Loop
@@ -68,7 +70,7 @@ while running:
             running = False
         # sys will check if keystroke is pressed by user
         if event.type == pygame.KEYDOWN:
-            print('A keystroke has been pressed')
+            # print('A keystroke has been pressed')
             if event.key == pygame.K_LEFT:
                 playerX_change = left_up_player_speed
             if event.key == pygame.K_RIGHT:
@@ -83,9 +85,8 @@ while running:
                     bulletX_Location = playerX
                     fire_bullet(bulletX_Location, bulletY_Location)
 
-
         if event.type == pygame.KEYUP:
-            print('A keystroke has been released')
+            # print('A keystroke has been released')
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 playerY_change = left_up_idle_movement
                 playerX_change = right_down_idle_movement
@@ -120,7 +121,6 @@ while running:
         elif hostile_SpywareY >= 550:
             hostile_SpywareY = 550
 
-
         # Bullet Movement
     if bulletY_Location <= 0:
         bulletY_Location = playerY
@@ -134,21 +134,19 @@ while running:
         bulletY_Location = playerY
         bullet_state = "ready"
 
-
     # Collision
 
     collision = isCollision(hostile_SpywareX, hostile_SpywareY, bulletX_Location, bulletY_Location)
     if collision:
         bulletY_Location = 480
         bullet_state = "ready"
+        hostile_Spyware_health > 1
         player_bullet_destroyed_hostile_score += 1
         print(player_bullet_destroyed_hostile_score)
         hostile_SpywareX = random.randint(0, 736)
         hostile_SpywareY = random.randint(50, 150)
 
     # Enemy Movement
-
-
 
     player(playerX, playerY)
     # hostile

@@ -36,7 +36,7 @@ player_bullet_destroyed_hostile_score = 0
 hostile_Spyware_Image = pygame.image.load('image/spyware0.png')
 hostile_SpywareX_Location = random.randint(0,800)
 hostile_SpywareY_Location = random.randint(0,30)
-
+hostile_Spyware_health = 2
 hostile_SpywareX = hostile_SpywareX_Location
 hostile_SpywareY = hostile_SpywareY_Location
 spyware_speed_right =1
