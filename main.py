@@ -1,6 +1,6 @@
 import pygame
 import math
-from entites_movement import *
+from entities import *
 
 # Intialize the pygame
 pygame.init()

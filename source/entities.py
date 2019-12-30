@@ -1,6 +1,6 @@
 import pygame
 import random
-from random import randint
+
 
 
 playerX_location = 370
