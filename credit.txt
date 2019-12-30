@@ -18,3 +18,13 @@ https://colorswall.com/palette/2190/
 #bckground
 <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by freepik -
 www.freepik.com</a>
+
+
+# laser sound
+https://freesound.org/people/lavik89/sounds/168984/
+#background music
+https://freesound.org/people/Psychotic_God/sounds/63977/
+
+#tutorial
+https://www.skillshare.com/classes/Python-Game-Development-using-Pygame-and-Python-3/1563370061/projects?via=logged-in-home-your-classes&autoPlay=1
+

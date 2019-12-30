@@ -24,7 +24,7 @@ right_down_idle_movement = 0
 # Bullet
 bullet_Image = pygame.image.load('image/zero_bullet.png')
 bulletX_Location = 0
-bulletY_Location = 480
+bulletY_Location = playerY
 bulletX_change = 0
 bulletY_change = 10
 bullet_state = "ready"
@@ -54,7 +54,8 @@ for i in range(number_of_hostiles):
     spyware_speed_left.append(-2)
     hostile_SpywareX_change.append(2)
     # move down by 15 pixels
-    hostile_SpywareY_change.append(35)
+    hostile_SpywareY_change.append(45)
+
 
 hostile_SpywareY_Location += hostile_SpywareY_change
 hostile_SpywareX_Location += hostile_SpywareX_change

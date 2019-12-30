@@ -1,6 +1,8 @@
 import pygame
 import math
 from entities import *
+from pygame import mixer
+from color import *
 
 # Intialize the pygame
 pygame.init()
@@ -10,21 +12,16 @@ window_screen = pygame.display.set_mode((800, 600))
 
 # Background
 background = pygame.image.load('image/background.jpg')
+# Background Music
+mixer.music.load("sounds/background_music.wav")
+mixer.music.play(-1)
 
 # Title / Icon
 pygame.display.set_caption('JA\'s Firewall Invader')
 icon = pygame.image.load('image/computer.png')
 pygame.display.set_icon(icon)
 
-# Score
-player_bullet_destroyed_hostile_score = 0
-font = pygame.font.Font('freesansbold.ttf', 32)
 
-textX = 10
-testY = 10
-
-# Game Over
-over_font = pygame.font.Font('freesansbold.ttf', 64)
 
 
 # Player
@@ -38,6 +35,27 @@ def fire_bullet(x, y):
     bullet_state = "fire"
     window_screen.blit(bullet_Image, (x, y + 40))
 
+# Score
+
+player_bullet_destroyed_hostile_score = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+textX_Location = 10
+textY_Location = 10
+
+# Game Over
+game_over_font = pygame.font.Font('freesansbold.ttf', 34)
+
+# Game Over Score
+score_game_over_font = pygame.font.Font('freesansbold.ttf', 64)
+
+def show_score(x, y):
+    score = font.render("Score : " + str(player_bullet_destroyed_hostile_score), True, (255, 255, 255))
+    window_screen.blit(score, (x, y))
+
+def game_over_text():
+    game_over_text = game_over_font.render("THE FIREWALL HAS BEEN BREACHED!!",True, (255, 255, 255))
+    window_screen.blit(game_over_text,(100, 300))
 
 def isCollision(hostile_SpywareX_Location, hostile_SpywareY_Location , bulletX_Location, bulletY_Location):
     distance = math.sqrt(math.pow(hostile_SpywareX_Location - bulletX_Location, 2) + (math.pow(hostile_SpywareY_Location - bulletY_Location, 2)))
@@ -78,6 +96,8 @@ while running:
                 playerY_change = right_down_player_speed
             if event.key == pygame.K_SPACE:
                 if bullet_state is "ready":
+                    bulletSound = mixer.Sound("sounds/player_shoot.wav")
+                    bulletSound.play()
                     # Get the current x cordinate of the spaceship
                     bulletX_Location = playerX
                     fire_bullet(bulletX_Location, bulletY_Location)
@@ -105,6 +125,13 @@ while running:
 
     # Hostile Spyware Movement
     for i in range(number_of_hostiles):
+        # Game Over
+        if hostile_SpywareY_Location[i] > 520:
+            for j in range(number_of_hostiles):
+                hostile_SpywareY_Location[j] = 2000
+            game_over_text()
+            break
+
         hostile_SpywareX_Location[i] += hostile_SpywareX_change[i]
         if hostile_SpywareX_Location[i] <= 0:
             hostile_SpywareX_change[i] = spyware_speed_right[i]
@@ -146,8 +173,7 @@ while running:
 
 
 
-    # Enemy Movement
 
     player(playerX, playerY)
-
+    show_score(textX_Location,textY_Location)
     pygame.display.update()
