@@ -16,4 +16,4 @@
  ----------------------------    ----------------------------   ------------------------- ------------------------------
 
  --v0 Ai Training: will be using this mini project to assist in the development of A.I firewall_invader shooter. This
-                    respo in in third in line for A.I training at the moment, will update on any changes
+                    respo is in in third in line for A.I training at the moment, will update on any changes
